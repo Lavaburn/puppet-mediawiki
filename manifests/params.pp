@@ -56,7 +56,7 @@ class mediawiki::params {
                          'wiki.phtml']
 
   case $::operatingsystem {
-    redhat, centos:  {
+    'RedHat', 'CentOS':  {
       $web_dir            = '/var/www/html'
       $doc_root           = "${web_dir}/wikis"
       #$packages           = ['php-gd', 'php-mysql', 'php-xml', 'wget', 'php-pecl-apcu', 'php-intl']
@@ -64,7 +64,7 @@ class mediawiki::params {
       $apache             = 'httpd'
       $apache_user        = 'apache'
     }
-    debian:  {
+    'Debian':  {
       $web_dir            = '/var/www'
       $doc_root           = "${web_dir}/wikis"
       #$packages           = ['php5', 'php5-mysql', 'wget']
@@ -72,7 +72,7 @@ class mediawiki::params {
       $apache             = 'apache2'
       $apache_user        = 'www-data'
     }
-    ubuntu:  {
+    'Ubuntu':  {
       $web_dir            = '/var/www'
       $doc_root           = "${web_dir}/wikis"
       #$packages           = ['php5', 'php5-mysql', 'wget']
