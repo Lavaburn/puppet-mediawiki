@@ -57,7 +57,7 @@ define mediawiki::instance (
   $smtp_username          = undef,
   $smtp_password          = undef,
   ) {
-  
+
   validate_re($ensure, '^(present|absent|deleted)$',
   "${ensure} is not supported for ensure.
   Allowed values are 'present', 'absent', and 'deleted'.")
@@ -93,7 +93,7 @@ define mediawiki::instance (
   # mysql_secure_installation)
   case $ensure {
     'present', 'absent': {
-      
+
       exec { "${name}-install_script":
         cwd         => "${mediawiki_install_path}/maintenance",
         command     => "/usr/bin/php install.php ${name} admin    \
@@ -118,8 +118,8 @@ define mediawiki::instance (
       # Ensure resource attributes common to all resources
       File {
         ensure => directory,
-        owner  => 'apache',
-        group  => 'apache',
+        owner  => $mediawiki::params::apache_user,
+        group  => $mediawiki::params::apache_user,
         mode   => '0755',
       }
 
@@ -139,7 +139,7 @@ define mediawiki::instance (
       # MediaWiki DefaultSettings
       file { "${mediawiki_conf_dir}/${name}/includes/DefaultSettings.php":
         ensure  =>  present,
-        content =>  template('mediawiki/DefaultSettings.php.erb'),  
+        content =>  template('mediawiki/DefaultSettings.php.erb'),
       }
 
       # Each instance needs a separate folder to upload images
@@ -151,7 +151,7 @@ define mediawiki::instance (
           default               => undef,
         }
       }
-      
+
       # Ensure that mediawiki configuration files are included in each instance.
       mediawiki::symlinks { $name:
         conf_dir      => $mediawiki_conf_dir,
@@ -165,7 +165,7 @@ define mediawiki::instance (
         target   => "${mediawiki_conf_dir}/${name}",
         require  => File["${mediawiki_conf_dir}/${name}"],
       }
-     
+
       # Each instance has a separate vhost configuration
       apache::vhost { $name:
         port          => $port,
@@ -178,7 +178,7 @@ define mediawiki::instance (
       }
     }
     'deleted': {
-      
+
       # Remove the MediaWiki instance directory if it is present
       file { "${mediawiki_conf_dir}/${name}":
         ensure  => absent,
@@ -205,7 +205,7 @@ define mediawiki::instance (
         port          => $port,
         docroot       => $doc_root,
         ensure        => 'absent',
-      } 
+      }
     }
   }
 }
