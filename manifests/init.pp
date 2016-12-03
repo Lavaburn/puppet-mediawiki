@@ -83,10 +83,11 @@ class mediawiki (
   $server_name,
   $admin_email,
   $db_root_password,
-  $doc_root       = $mediawiki::params::doc_root,
-  $tarball_url    = $mediawiki::params::tarball_url,
-  $package_ensure = 'latest',
-  $max_memory     = '2048'
+  $db_root_username = 'root',
+  $doc_root         = $mediawiki::params::doc_root,
+  $tarball_url      = $mediawiki::params::tarball_url,
+  $package_ensure   = 'latest',
+  $max_memory       = '2048'
   ) inherits mediawiki::params {
 
   $web_dir = $mediawiki::params::web_dir

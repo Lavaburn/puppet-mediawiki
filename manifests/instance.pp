@@ -70,6 +70,7 @@ define mediawiki::instance (
   # Make the configuration file more readable
   $admin_email             = $mediawiki::admin_email
   $db_root_password        = $mediawiki::db_root_password
+  $db_root_username        = $mediawiki::db_root_username
   $server_name             = $mediawiki::server_name
   $doc_root                = $mediawiki::doc_root
   $mediawiki_install_path  = $mediawiki::mediawiki_install_path
@@ -103,7 +104,7 @@ define mediawiki::instance (
                         --scriptpath /${name}                     \
                         --dbtype mysql                            \
                         --dbserver localhost                      \
-                        --installdbuser root                      \
+                        --installdbuser ${db_root_username}       \
                         --installdbpass ${db_root_password}       \
                         --dbname ${db_name}                       \
                         --dbuser ${db_user}                       \
