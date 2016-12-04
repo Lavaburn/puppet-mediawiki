@@ -42,6 +42,7 @@ define mediawiki::instance (
   $db_name                = $name,
   $db_user                = "${name}_user",
   $db_prefix              = 'wk',
+  $servername             = $mediawiki::server_name,
   $ip                     = '*',
   $port                   = '80',
   $server_aliases         = '',
@@ -71,7 +72,6 @@ define mediawiki::instance (
   $admin_email             = $mediawiki::admin_email
   $db_root_password        = $mediawiki::db_root_password
   $db_root_username        = $mediawiki::db_root_username
-  $server_name             = $mediawiki::server_name
   $doc_root                = $mediawiki::doc_root
   $mediawiki_install_path  = $mediawiki::mediawiki_install_path
   $mediawiki_conf_dir      = $mediawiki::params::conf_dir
@@ -100,8 +100,8 @@ define mediawiki::instance (
         command     => "/usr/bin/php install.php ${name} admin    \
                         --pass puppet                             \
                         --email ${admin_email}                    \
-                        --server http://${server_name}            \
-                        --scriptpath /${name}                     \
+                        --server http://${servername}             \
+                        --scriptpath /                            \
                         --dbtype mysql                            \
                         --dbserver localhost                      \
                         --installdbuser ${db_root_username}       \
@@ -172,7 +172,7 @@ define mediawiki::instance (
         port          => $port,
         docroot       => "${doc_root}/${name}",
         serveradmin   => $admin_email,
-        servername    => $server_name,
+        servername    => $servername,
         vhost_name    => $ip,
         serveraliases => $server_aliases,
         ensure        => $ensure,
