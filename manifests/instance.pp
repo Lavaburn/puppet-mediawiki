@@ -101,7 +101,7 @@ define mediawiki::instance (
                         --pass puppet                             \
                         --email ${admin_email}                    \
                         --server http://${servername}             \
-                        --scriptpath /                            \
+                        --scriptpath ''                           \
                         --dbtype mysql                            \
                         --dbserver localhost                      \
                         --installdbuser ${db_root_username}       \
