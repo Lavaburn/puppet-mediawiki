@@ -170,7 +170,7 @@ define mediawiki::instance (
       # Each instance has a separate vhost configuration
       apache::vhost { $name:
         port          => $port,
-        docroot       => $doc_root,
+        docroot       => "${doc_root}/${name}",
         serveradmin   => $admin_email,
         servername    => $server_name,
         vhost_name    => $ip,
