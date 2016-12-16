@@ -57,6 +57,8 @@ define mediawiki::instance (
   $smtp_auth              = undef,
   $smtp_username          = undef,
   $smtp_password          = undef,
+  $short_url              = undef,
+  $enable_uploads         = false,
   ) {
 
   validate_re($ensure, '^(present|absent|deleted)$',
@@ -132,6 +134,20 @@ define mediawiki::instance (
         }
       }
 
+      if ($short_url != undef) {
+        file_line{"${name}_article_path":
+          path  =>  "${mediawiki_conf_dir}/${name}/LocalSettings.php",
+          line  =>  "\$wgArticlePath = '/${short_url}/\$1';",
+        }
+      }
+
+      if $enable_uploads {
+        file_line{"${name}_enable_uploads":
+          path  =>  "${mediawiki_conf_dir}/${name}/LocalSettings.php",
+          line  =>  "\$wgEnableUploads = true;",
+        }
+      }
+
       # MediaWiki instance directory
       file { "${mediawiki_conf_dir}/${name}":
         ensure   => directory,
@@ -168,14 +184,25 @@ define mediawiki::instance (
       }
 
       # Each instance has a separate vhost configuration
+      if ($short_url != undef) {
+        $rewrites = [
+          {
+            rewrite_rule => [ "^/?${short_url}(/.*)?$ %{DOCUMENT_ROOT}/index.php [L]" ],
+          }
+        ]
+      } else {
+        $rewrites = []
+      }
+
       apache::vhost { $name:
+        ensure        => $ensure,
         port          => $port,
         docroot       => "${doc_root}/${name}",
         serveradmin   => $admin_email,
         servername    => $servername,
         vhost_name    => $ip,
         serveraliases => $server_aliases,
-        ensure        => $ensure,
+        rewrites      => $rewrites,
       }
     }
     'deleted': {
